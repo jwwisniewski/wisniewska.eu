@@ -8,9 +8,9 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-Copywriter portfolio/blog website (wisniewska.eu) with a public landing page and admin panel for managing blog posts. Built with Spring Boot 4.1.0-SNAPSHOT, Thymeleaf, Spring Security, Spring Data JPA, and PostgreSQL.
+Copywriter portfolio/blog website (wisniewska.eu) with a public landing page and admin panel for managing blog posts. Built with Spring Boot 4.0.3, Thymeleaf, Spring Security, Spring Data JPA, and H2 (dev) / PostgreSQL (prod).
 
-The project is in early stage — only the Spring Boot skeleton exists. The implementation plan is in `docs:plans/copywriter_portfolio_project_plan.md`.
+The project is in early stage — only the Spring Boot skeleton exists. The implementation plan is in `docs/plans/copywriter_portfolio_project_plan.md`.
 
 ## Build & Run Commands
 
@@ -33,9 +33,9 @@ The project is in early stage — only the Spring Boot skeleton exists. The impl
 
 ## Tech Stack
 
-- **Java 25** / **Spring Boot 4.1.0-SNAPSHOT** (uses Spring Snapshots repository)
+- **Java 21** / **Spring Boot 4.0.3**
 - **Thymeleaf** with Spring Security integration (`thymeleaf-extras-springsecurity6`)
-- **Spring Data JPA** with **PostgreSQL**
+- **Spring Data JPA** with **H2** (development) — PostgreSQL planned for production
 - **Lombok** for boilerplate reduction (annotation processor configured in maven-compiler-plugin)
 - **Maven 3.9.12** via wrapper (`./mvnw`)
 
@@ -56,5 +56,5 @@ The target structure follows standard Spring Boot layered architecture:
 - Server-side rendering with Thymeleaf (not a SPA)
 - Spring Security protects `/admin/**` routes; public routes (`/`, `/post/**`) are unauthenticated
 - Configuration uses YAML format (`application.yaml`)
-- PostgreSQL is the only supported database (no H2 fallback configured)
+- H2 in-memory database for development; PostgreSQL planned for production
 - Database schema managed via `spring.jpa.hibernate.ddl-auto`

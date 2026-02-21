@@ -21,56 +21,40 @@ Build a portfolio/blog website for your wife (copywriter) with:
 
 #### Task 1.1: Create Spring Boot Project (1.5 hours)
 - [ ] Go to https://start.spring.io
-- [ ] Configure project settings:
+- [x] Configure project settings:
   - **Project:** Maven
   - **Language:** Java
-  - **Spring Boot version:** Latest stable (3.x)
+  - **Spring Boot version:** 4.0.3
   - **Packaging:** JAR
-  - **Java version:** 17 or 21
-  - **Group:** com.yourname (e.g., com.example)
-  - **Artifact:** copywriter-portfolio
-- [ ] Add dependencies (search and add these):
-  - Spring Web
+  - **Java version:** 21
+  - **Group:** eu.wisniewska
+  - **Artifact:** www
+- [x] Add dependencies:
+  - Spring Web (webmvc)
   - Spring Data JPA
-  - PostgreSQL Driver
+  - H2 (development) — PostgreSQL planned for production
   - Thymeleaf
   - Spring Security
-  - Lombok (optional, but helpful)
-- [ ] Configuration file format: **application.yml** (YAML format)
-- [ ] Click "Generate" and download the project
-- [ ] Extract the downloaded zip file to a folder on your computer
-- [ ] Open the project in your IDE (IntelliJ, VS Code, or Eclipse)
-- [ ] Verify it runs:
+  - Lombok
+- [x] Configuration file format: **application.yaml** (YAML format)
+- [x] Open the project in IntelliJ IDEA
+- [x] Verify it runs:
   ```bash
-  mvn spring-boot:run
+  ./mvnw spring-boot:run
   ```
-  Should start on port 8080 and show "Whitelabel Error Page" (normal—no routes yet)
-- [ ] Initialize Git:
-  ```bash
-  git init
-  git add .
-  git commit -m "Initial Spring Boot project setup"
-  ```
+  Shows "Whitelabel Error Page" (normal—no routes yet)
+- [ ] Initial Git commit
 
 **Deliverable:** Spring Boot app that starts without errors, committed to Git
 
-#### Task 1.2: Configure PostgreSQL & Create Post Entity (1.5 hours)
-- [ ] Install PostgreSQL locally (or use Docker if familiar: `docker run --name postgres-copywriter -e POSTGRES_PASSWORD=yourpassword -p 5432:5432 -d postgres`)
-- [ ] Create a database: `createdb copywriter_db`
-- [ ] Update `application.properties` or `application.yml`:
-  ```
-  spring.datasource.url=jdbc:postgresql://localhost:5432/copywriter_db
-  spring.datasource.username=postgres
-  spring.datasource.password=yourpassword
-  spring.jpa.hibernate.ddl-auto=update
-  spring.jpa.show-sql=true
-  ```
-- [ ] Create `Post` JPA entity class in `src/main/java/com/yourname/entity/Post.java`:
+#### Task 1.2: Configure Database & Create Post Entity (1.5 hours)
+- [x] H2 in-memory database configured in `application.yaml`
+- [ ] Create `Post` JPA entity class in `src/main/java/eu/wisniewska/www/entity/Post.java`:
   - Fields: `id` (Long), `title` (String), `content` (String), `excerpt` (String), `slug` (String), `featured` (Boolean), `published` (Boolean), `createdAt` (LocalDateTime), `updatedAt` (LocalDateTime)
   - Use `@Entity`, `@Table`, `@Id`, `@GeneratedValue`, `@Column` annotations
   - Add getters/setters or use Lombok `@Data`
-- [ ] Create `PostRepository` interface extending `JpaRepository<Post, Long>` in `src/main/java/com/yourname/repository/`
-- [ ] Test the setup by running the app—it should create the `post` table in PostgreSQL
+- [ ] Create `PostRepository` interface extending `JpaRepository<Post, Long>` in `src/main/java/eu/wisniewska/www/repository/`
+- [ ] Test the setup by running the app—it should create the `post` table in H2
 - [ ] Commit: "Add Post entity and PostRepository"
 
 **Deliverable:** Database table created, able to insert/retrieve posts via JPA
@@ -506,9 +490,9 @@ Build a portfolio/blog website for your wife (copywriter) with:
 ## Project Structure Reference
 
 ```
-copywriter-portfolio/
-├── src/main/java/com/yourname/
-│   ├── CopywriterApplication.java
+www.wisniewska.eu/
+├── src/main/java/eu/wisniewska/www/
+│   ├── WwwApplication.java
 │   ├── controller/
 │   │   ├── HomeController.java
 │   │   ├── AdminController.java
@@ -536,7 +520,7 @@ copywriter-portfolio/
 │   ├── static/
 │   │   ├── css/style.css
 │   │   └── js/script.js
-│   └── application.properties
+│   └── application.yaml
 ├── pom.xml
 ├── README.md
 └── .gitignore
