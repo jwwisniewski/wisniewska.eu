@@ -7,6 +7,6 @@ server:
 
 app:
   datasource:
-    url: jdbc:h2:mem:testdb
+    url: jdbc:h2:file:./data/eu.wisniewska
     username: user
     password: password

@@ -20,7 +20,7 @@ Build a portfolio/blog website for your wife (copywriter) with:
 ### Week 1: Project Setup & Data Model
 
 #### Task 1.1: Create Spring Boot Project (1.5 hours)
-- [ ] Go to https://start.spring.io
+- [x] Go to https://start.spring.io
 - [x] Configure project settings:
   - **Project:** Maven
   - **Language:** Java
@@ -43,7 +43,7 @@ Build a portfolio/blog website for your wife (copywriter) with:
   ./mvnw spring-boot:run
   ```
   Shows "Whitelabel Error Page" (normal—no routes yet)
-- [ ] Initial Git commit
+- [x] Initial Git commit
 
 **Deliverable:** Spring Boot app that starts without errors, committed to Git
 
@@ -60,18 +60,18 @@ Build a portfolio/blog website for your wife (copywriter) with:
 **Deliverable:** Database table created, able to insert/retrieve posts via JPA
 
 #### Task 1.3: Create Basic Controllers & Landing Page (2 hours)
-- [ ] Create `HomeController` class:
-  - Route: `GET /` → render landing page
-  - Fetch featured posts from database
-  - Pass to Thymeleaf template
-- [ ] Create `home.html` in `src/main/resources/templates/`:
-  - Display your wife's bio/headline
-  - Display featured posts (title, excerpt, link to full post)
-  - Add a simple CSS file in `src/main/resources/static/css/style.css` for basic styling
+- [x] Create `IndexController` class:
+  - Route: `GET /` → render landing page (basic)
+  - TODO: Fetch featured posts from database
+  - TODO: Pass to Thymeleaf template
+- [x] Create `index.html` in `src/main/resources/templates/` (basic template)
+  - TODO: Display your wife's bio/headline
+  - TODO: Display featured posts (title, excerpt, link to full post)
+  - TODO: Add a simple CSS file in `src/main/resources/static/css/style.css` for basic styling
 - [ ] Create `post.html` template to display a single full post:
   - Route: `GET /post/{slug}` → fetch post by slug, display full content
 - [ ] Add basic HTML structure and styling (keep it simple—focus on function, not design)
-- [ ] Test locally: Visit http://localhost:8080, see landing page
+- [x] Test locally: Visit http://localhost:8181, see landing page
 - [ ] Commit: "Add landing page and post detail view"
 
 **Deliverable:** Landing page works, displays placeholder posts, basic styling in place
