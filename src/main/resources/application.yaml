@@ -1,15 +1,13 @@
 spring:
   application:
     name: www
-
-server:
-  port: 8181
-
-app:
   datasource:
     url: jdbc:h2:file:./data/eu.wisniewska
     username: user
     password: password
+
+server:
+  port: 8181
 
 management:
   endpoints:
