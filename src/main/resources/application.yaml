@@ -10,3 +10,12 @@ app:
     url: jdbc:h2:file:./data/eu.wisniewska
     username: user
     password: password
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health
+  endpoint:
+    health:
+      show-details: always
