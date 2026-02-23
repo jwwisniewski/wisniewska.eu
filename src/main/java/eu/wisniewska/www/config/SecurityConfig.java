@@ -10,10 +10,10 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http.authorizeHttpRequests(
-                (authorizeRequests) -> authorizeRequests.anyRequest().permitAll()
-        );
-
-        return http.build();
+        return http.authorizeHttpRequests(
+                (authorizeRequests) -> authorizeRequests
+                        .requestMatchers("/actuator/**").permitAll()
+                        .anyRequest().permitAll()
+        ).build();
     }
 }
