@@ -17,3 +17,9 @@ management:
   endpoint:
     health:
       show-details: always
+
+app:
+  admin:
+    username: admin
+    password: qwertyuiop
+    role: ADMIN
