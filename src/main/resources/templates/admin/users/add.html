@@ -5,8 +5,19 @@
 <nav th:replace="~{admin/fragments :: nav(${activePage})}"></nav>
 <a th:href="@{/_admin/users}">Back to Users</a>
 <h1>Create a new Admin User</h1>
-
 <section>
+    <form th:action="@{/_admin/users/save}" method="post">
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username" required>
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" required>
+        <label for="role">Role:</label>
+        <select id="role" name="role">
+            <option value="ADMIN">Admin</option>
+            <option value="USER">User</option>
+        </select>
+        <button type="submit">Create User</button>
+    </form>
 
 </section>
 </body>

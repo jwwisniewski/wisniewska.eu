@@ -1,13 +1,44 @@
 <!DOCTYPE html>
 <html lang="pl" xmlns:th="http://www.thymeleaf.org">
-<head th:replace="~{admin/fragments :: head(${pageTitle})}" />
+<head th:replace="~{admin/fragments :: head(${pageTitle})}"/>
 <body>
 <nav th:replace="~{admin/fragments :: nav(${activePage})}"></nav>
 <a th:href="@{/_admin/users/add}">Add User</a>
 <h1>Admin Users Listing</h1>
 
 <section>
-
+    <table>
+        <thead>
+        <tr>
+            <th>Username</th>
+            <th>Role</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="user : ${users}">
+            <td th:text="${user.username}"></td>
+            <td th:text="${user.role}"></td>
+            <td>
+                <ul>
+                    <li>
+                        <a th:href="@{/_admin/users/edit/{id}(id=${user.id})}">Edit</a>
+                    </li>
+                    <li>
+                        <form th:action="@{/_admin/users/change-password/{id}(id=${user.id})}" method="post">
+                            <button type="submit">Change Password</button>
+                        </form>
+                    </li>
+                    <li>
+                        <form th:action="@{/_admin/users/delete/{id}(id=${user.id})}" method="post">
+                            <button type="submit">Delete</button>
+                        </form>
+                    </li>
+                </ul>
+            </td>
+        </tr>
+        </tbody>
+    </table>
 </section>
 </body>
 </html>
