@@ -10,7 +10,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 Copywriter portfolio/blog website (wisniewska.eu) with a public landing page and admin panel for managing blog posts. Built with Spring Boot 4.0.3, Thymeleaf, Spring Security, Spring Data JPA, and H2 (dev) / PostgreSQL (prod).
 
-The project is in early stage — only the Spring Boot skeleton exists. The implementation plan is in `docs/plans/copywriter_portfolio_project_plan.md`.
+The implementation plan is in `docs/plans/copywriter_portfolio_project_plan.md`.
 
 ## Build & Run Commands
 
@@ -35,7 +35,7 @@ The project is in early stage — only the Spring Boot skeleton exists. The impl
 
 - **Java 21** / **Spring Boot 4.0.3**
 - **Thymeleaf** with Spring Security integration (`thymeleaf-extras-springsecurity6`)
-- **Spring Data JPA** with **H2** (development) — PostgreSQL planned for production
+- **Spring Data JPA** with **H2** (development) and **PostgreSQL** (production on Railway)
 - **Lombok** for boilerplate reduction (annotation processor configured in maven-compiler-plugin)
 - **Maven 3.9.12** via wrapper (`./mvnw`)
 
@@ -43,10 +43,10 @@ The project is in early stage — only the Spring Boot skeleton exists. The impl
 
 The target structure follows standard Spring Boot layered architecture:
 
-- `eu.wisniewska.www.controller` — MVC controllers (`HomeController`, `AdminController`)
-- `eu.wisniewska.www.entity` — JPA entities (`Post`, `User`)
-- `eu.wisniewska.www.repository` — Spring Data repositories
-- `eu.wisniewska.www.service` — Business logic services
+- `eu.wisniewska.www.controller` — MVC controllers (`IndexController`, `AdminController`, `AdminUserController`)
+- `eu.wisniewska.www.entity` — JPA entities (`AdminUser`; `Post` planned)
+- `eu.wisniewska.www.repository` — Spring Data repositories (`AdminUserRepository`)
+- `eu.wisniewska.www.service` — Business logic services (`AdminUserService`)
 - `eu.wisniewska.www.config` — Security and app configuration (`SecurityConfig`)
 - `src/main/resources/templates/` — Thymeleaf templates (public + `admin/` subdirectory)
 - `src/main/resources/static/` — CSS, JS, images
@@ -54,7 +54,9 @@ The target structure follows standard Spring Boot layered architecture:
 ## Key Design Decisions
 
 - Server-side rendering with Thymeleaf (not a SPA)
-- Spring Security protects `/admin/**` routes; public routes (`/`, `/post/**`) are unauthenticated
-- Configuration uses YAML format (`application.yaml`)
-- H2 in-memory database for development; PostgreSQL planned for production
+- Spring Security protects `/_admin/**` routes (requires `ADMIN` role); public routes (`/`, `/actuator/**`) are unauthenticated
+- Service account configured via `app.admin.*` properties (overridable via env vars in production)
+- Configuration uses YAML format (`application.yaml`) with profile overrides (`application-production.yaml`, `application-test.yaml`)
+- H2 file-based database for development (`create-drop`); PostgreSQL for production (`update`)
 - Database schema managed via `spring.jpa.hibernate.ddl-auto`
+- Deployed to Railway with PostgreSQL; CI via GitHub Actions

@@ -79,27 +79,22 @@ Build a portfolio/blog website for your wife (copywriter) with:
 ### Week 2: Prepare for Deployment & Add Initial Data
 
 #### Task 2.1: Set Up Git & GitHub (0.5 hours)
-- [ ] Initialize Git repo locally: `git init`
-- [ ] Create a `.gitignore` file (ignore `target/`, `.env`, `*.properties` with passwords)
-- [ ] Create a GitHub repository (public, so you can show it to employers)
-- [ ] Push your code to GitHub
+- [x] Initialize Git repo locally
+- [x] Create a `.gitignore` file
+- [x] Create a GitHub repository
+- [x] Push code to GitHub
+- [x] Set up GitHub Actions CI workflow (build + test steps)
 
 **Deliverable:** Code on GitHub, clean commit history
 
 #### Task 2.2: Configure for Production Deployment (1 hour)
-- [ ] Create a `Railway.app` account (free tier) or `Render.com` account
-- [ ] For Railway:
-  - Connect GitHub repo
-  - Create PostgreSQL service
-  - Create Spring Boot service, link to GitHub repo
-  - Set environment variables: `SPRING_DATASOURCE_URL`, `SPRING_DATASOURCE_USERNAME`, `SPRING_DATASOURCE_PASSWORD`
-- [ ] For Render:
-  - Deploy PostgreSQL database
-  - Deploy Spring Boot app (connect to GitHub)
-  - Set environment variables similarly
-- [ ] Deploy and test—your site should be live at a public URL
-- [ ] Fix any deployment issues (usually missing dependencies or database config)
-- [ ] Commit: "Add production configuration for Railway/Render"
+- [x] Create Railway account and connect GitHub repo
+- [x] Create PostgreSQL service on Railway
+- [x] Configure `application-production.yaml` with PostgreSQL env variables (`PGHOST`, `PGPORT`, `PGDATABASE`, `PGUSER`, `PGPASSWORD`)
+- [x] Set `SPRING_PROFILES_ACTIVE=production` in Railway
+- [x] Set `APP_ADMIN_USERNAME` and `APP_ADMIN_PASSWORD` in Railway
+- [x] Deploy and test — site live at public URL
+- [x] Fix `ddl-auto: create-drop` → `update` for production (data loss issue)
 
 **Deliverable:** Site live on the internet at a public URL
 
@@ -122,38 +117,41 @@ Build a portfolio/blog website for your wife (copywriter) with:
 ### Week 3: Authentication & Admin Endpoints
 
 #### Task 3.1: Set Up Spring Security (1.5 hours)
-- [ ] Create a `User` entity class:
-  - Fields: `id`, `username`, `password`, `email`, `role`
-  - Add `@Entity`, `@Table` annotations
-- [ ] Create `UserRepository` extending `JpaRepository<User, Long>`
-- [ ] Create `SecurityConfig` class extending `WebSecurityConfigurerAdapter`:
-  - Configure password encoder: `BCryptPasswordEncoder`
-  - Set up login page at `/login`
-  - Allow unauthenticated access to `/` and `/post/**`
-  - Require authentication for `/admin/**`
-  - Add logout functionality
-- [ ] Create `CustomUserDetailsService` implementing `UserDetailsService` to load users from database
-- [ ] Create one test user in the database (hashed password) for your wife to log in
-- [ ] Test locally: Visit `/login`, log in with test user, verify redirect to `/admin`
-- [ ] Commit: "Add Spring Security with login/logout"
+- [x] Create `SecurityConfig` class with `SecurityFilterChain` bean:
+  - Configure `BCryptPasswordEncoder`
+  - Default Spring login page (no custom login page yet)
+  - Allow unauthenticated access to `/`, `/actuator/**`
+  - Require `ADMIN` role for `/_admin/**`
+  - Logout functionality configured
+- [x] In-memory service account with credentials from `application.yaml` (`app.admin.*` properties)
+- [x] Credentials overridable via environment variables in production
+- [x] Create `AdminUser` JPA entity (UUID id, username, password, role, createdAt, updatedAt)
+- [x] Create `AdminUserRepository` extending `JpaRepository<AdminUser, UUID>`
+- [x] Create `AdminUserService` with `findAll()`, `save()` (with password hashing), `delete()`
+- [x] Unit tests for service (Mockito mocks, ArgumentCaptor for password hashing)
+- [ ] Create `CustomUserDetailsService` to allow database-backed users to log in
+- [x] Test locally: Visit `/_admin`, login with service account, redirect to admin panel
 
 **Deliverable:** Login page works, authentication enforced
 
 #### Task 3.2: Build Admin Dashboard Structure (1.5 hours)
-- [ ] Create `AdminController`:
-  - Route: `GET /admin` → show admin dashboard (requires authentication)
-  - Route: `GET /admin/posts` → list all posts (paginated, show draft/published status)
-  - Route: `GET /admin/posts/new` → form to create new post
-  - Route: `GET /admin/posts/{id}/edit` → form to edit existing post
-- [ ] Create admin templates in `src/main/resources/templates/admin/`:
-  - `dashboard.html` → overview, quick stats (total posts, published count)
-  - `posts-list.html` → table of all posts with edit/delete buttons
-  - `post-form.html` → form for creating/editing posts (title, content, excerpt, featured toggle, publish toggle)
-- [ ] Add basic styling for admin UI (functional > pretty for now)
-- [ ] Test locally: Log in, navigate to /admin, see dashboard
-- [ ] Commit: "Add admin dashboard structure and templates"
+- [x] Create `AdminController`:
+  - Route: `GET /_admin` → admin dashboard
+- [x] Create `AdminUserController`:
+  - Route: `GET /_admin/users` → list all admin users
+  - Route: `GET /_admin/users/add` → form to create new admin user
+  - Route: `POST /_admin/users/save` → save new admin user (with validation)
+  - Route: `POST /_admin/users/delete/{id}` → delete admin user
+- [x] Create admin templates with Thymeleaf fragments (`admin/fragments.html` for nav and head)
+  - `admin/index.html` → dashboard
+  - `admin/users/index.html` → user listing table
+  - `admin/users/add.html` → add user form with validation
+- [x] Active page highlighting in nav via `@ModelAttribute`
+- [x] Controller tests with MockMvc (auth, anonymous, validation with parameterized tests)
+- [ ] TODO: Post management routes and templates
+- [x] Test locally: Log in, navigate to /_admin, manage users
 
-**Deliverable:** Admin dashboard accessible, basic layout in place
+**Deliverable:** Admin dashboard accessible, user management working
 
 #### Task 3.3: Implement CRUD Endpoints (1.5 hours)
 - [ ] Add POST endpoint to `AdminController`:
