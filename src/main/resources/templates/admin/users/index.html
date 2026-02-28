@@ -25,11 +25,6 @@
                         <a th:href="@{/_admin/users/edit/{id}(id=${user.id})}">Edit</a>
                     </li>
                     <li>
-                        <form th:action="@{/_admin/users/change-password/{id}(id=${user.id})}" method="post">
-                            <button type="submit">Change Password</button>
-                        </form>
-                    </li>
-                    <li>
                         <form th:action="@{/_admin/users/delete/{id}(id=${user.id})}" method="post">
                             <button type="submit">Delete</button>
                         </form>

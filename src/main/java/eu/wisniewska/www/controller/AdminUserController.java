@@ -6,10 +6,9 @@ import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.UUID;
 
 @Controller
 @RequestMapping("/_admin/users")
@@ -50,6 +49,14 @@ public class AdminUserController {
         }
 
         adminUserService.save(adminUser);
+
+        return "redirect:/_admin/users";
+    }
+
+    @PostMapping("/delete/{id}")
+    public String delete(@PathVariable UUID id) {
+
+        adminUserService.delete(id);
 
         return "redirect:/_admin/users";
     }

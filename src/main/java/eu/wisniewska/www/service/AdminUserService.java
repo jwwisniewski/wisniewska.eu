@@ -6,6 +6,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class AdminUserService {
@@ -27,5 +28,9 @@ public class AdminUserService {
                 bCryptPasswordEncoder.encode(adminUser.getPassword())
         );
         adminUserRepository.save(adminUser);
+    }
+
+    public void delete(UUID id) {
+        adminUserRepository.deleteById(id);
     }
 }

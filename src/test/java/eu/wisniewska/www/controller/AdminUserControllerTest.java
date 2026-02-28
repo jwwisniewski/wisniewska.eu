@@ -12,6 +12,7 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.util.UUID;
 import java.util.stream.Stream;
 
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
@@ -27,6 +28,7 @@ public class AdminUserControllerTest {
     private static final String LISTING_URL = "/_admin/users";
     private static final String ADD_URL = "/_admin/users/add";
     private static final String SAVE_URL = "/_admin/users/save";
+    private static final String DELETE_URL = "/_admin/users/delete";
 
     @Autowired
     private MockMvc mockMvc;
@@ -135,6 +137,27 @@ public class AdminUserControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(model().hasErrors())
                 .andExpect(view().name("admin/users/add"));
+    }
+
+    @Test
+    @WithAnonymousUser
+    public void test_WHEN_notAuthenticated_AND_deleteCalled_THEN_redirectsToLogin() throws Exception {
+        mockMvc
+                .perform(post(DELETE_URL).with(csrf()))
+                .andExpect(redirectedUrl("/login"))
+        ;
+    }
+
+    @Test
+    @WithMockUser(roles = "ADMIN")
+    public void test_WHEN_deleteCalled_THEN_redirectsToListing() throws Exception {
+        mockMvc
+                .perform(
+                        post(DELETE_URL + "/" + UUID.randomUUID())
+                                .with(csrf())
+                )
+                .andExpect(redirectedUrl(LISTING_URL))
+        ;
     }
 
 }
