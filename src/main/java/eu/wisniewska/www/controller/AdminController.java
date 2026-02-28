@@ -10,6 +10,8 @@ public class AdminController {
     @GetMapping({"/_admin", "/_admin/"})
     public String index(Model model) {
         model.addAttribute("activePage", "index");
+        model.addAttribute("pageTitle", "Panel");
+
         return "admin/index";
     }
 

@@ -10,12 +10,16 @@ public class AdminUserController {
     @GetMapping("/_admin/users")
     public String index(Model model) {
         model.addAttribute("activePage", "users");
+        model.addAttribute("pageTitle", "Admin User Listing");
+
         return "admin/users/index";
     }
 
     @GetMapping("/_admin/users/add")
     public String add(Model model) {
         model.addAttribute("activePage", "users");
+        model.addAttribute("pageTitle", "Adding a new Admin User");
+
         return "admin/users/add";
     }
 
