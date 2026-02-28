@@ -8,21 +8,7 @@
     <link rel="stylesheet" th:href="@{/css/admin.css}">
 </head>
 <body>
-<nav>
-    <ul>
-        <li>
-            <a th:href="@{/_admin}" th:classappend="${activePage == 'index'} ? 'active'">Panel Home</a>
-        </li>
-        <li>
-            <a th:href="@{/_admin/users}" th:classappend="${activePage == 'users'} ? 'active'">Users</a>
-        </li>
-        <li>
-            <form th:action="@{/logout}" method="post">
-                <button type="submit">Logout</button>
-            </form>
-        </li>
-    </ul>
-</nav>
+<nav th:replace="~{admin/fragments :: nav(${activePage})}"></nav>
 <h1>Panel Home</h1>
 <section>
     Panel Body
