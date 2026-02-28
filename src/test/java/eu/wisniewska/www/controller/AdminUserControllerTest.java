@@ -1,6 +1,9 @@
 package eu.wisniewska.www.controller;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
@@ -8,6 +11,8 @@ import org.springframework.security.test.context.support.WithAnonymousUser;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
+
+import java.util.stream.Stream;
 
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -26,6 +31,24 @@ public class AdminUserControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
+    static Stream<Arguments> invalidUserData() {
+        return Stream.of(
+                Arguments.of("", "password", "ADMIN", "blank username"),
+                Arguments.of("ab", "password", "ADMIN", "username too short"),
+                Arguments.of("a".repeat(256), "password", "ADMIN", "username too long"),
+                Arguments.of("   ", "password", "ADMIN", "whitespace-only username"),
+                Arguments.of("admin", "", "ADMIN", "blank password"),
+                Arguments.of("admin", "ab", "ADMIN", "password too short"),
+                Arguments.of("admin", "a".repeat(256), "ADMIN", "password too long"),
+                Arguments.of("admin", "   ", "ADMIN", "whitespace-only password"),
+                Arguments.of("admin", "password", "", "blank role"),
+                Arguments.of("admin", "password", "INVALID", "invalid role"),
+                Arguments.of("admin", "password", "admin", "role wrong case"),
+                Arguments.of("admin", "password", "SUPERADMIN", "non-existent role"),
+                Arguments.of("", "", "", "all fields blank"),
+                Arguments.of("ab", "ab", "INVALID", "all fields invalid")
+        );
+    }
 
     @Test
     @WithAnonymousUser
@@ -72,7 +95,7 @@ public class AdminUserControllerTest {
     @WithAnonymousUser
     public void test_WHEN_notAuthenticated_AND_saveUserCalled_THEN_redirectsToLogin() throws Exception {
         mockMvc
-                .perform(get(SAVE_URL))
+                .perform(post(SAVE_URL).with(csrf()))
                 .andExpect(redirectedUrl("/login"))
         ;
     }
@@ -90,6 +113,28 @@ public class AdminUserControllerTest {
                 )
                 .andExpect(redirectedUrl(LISTING_URL))
         ;
+    }
+
+    @ParameterizedTest(name = "{index}: {3}")
+    @WithMockUser(roles = "ADMIN")
+    @MethodSource("invalidUserData")
+    public void test_WHEN_incorrectPayload_THEN_returnsHTTP400(
+            String username,
+            String password,
+            String role,
+            String testCase
+    ) throws Exception {
+        mockMvc
+                .perform(
+                        post(SAVE_URL)
+                                .with(csrf())
+                                .param("username", username)
+                                .param("password", password)
+                                .param("role", role)
+                )
+                .andExpect(status().isOk())
+                .andExpect(model().hasErrors())
+                .andExpect(view().name("admin/users/add"));
     }
 
 }
