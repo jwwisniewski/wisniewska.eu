@@ -1,6 +1,7 @@
 package eu.wisniewska.www.controller;
 
 import eu.wisniewska.www.entity.AdminUser;
+import eu.wisniewska.www.form.AdminUserCreateForm;
 import eu.wisniewska.www.service.AdminUserService;
 import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
@@ -37,18 +38,18 @@ public class AdminUserController {
     @GetMapping("/add")
     public String add(Model model) {
         model.addAttribute("pageTitle", "Adding a new Admin User");
-        model.addAttribute("adminUser", new AdminUser());
+        model.addAttribute("adminUserCreateForm", new AdminUserCreateForm());
 
         return "admin/users/add";
     }
 
     @PostMapping("/save")
-    public String save(@Valid @ModelAttribute AdminUser adminUser, BindingResult bindingResult) {
+    public String save(@Valid @ModelAttribute AdminUserCreateForm adminUserCreateForm, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return "admin/users/add";
         }
 
-        adminUserService.save(adminUser);
+        adminUserService.save(adminUserCreateForm);
 
         return "redirect:/_admin/users";
     }

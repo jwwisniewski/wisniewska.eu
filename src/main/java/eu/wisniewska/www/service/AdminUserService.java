@@ -1,6 +1,7 @@
 package eu.wisniewska.www.service;
 
 import eu.wisniewska.www.entity.AdminUser;
+import eu.wisniewska.www.form.AdminUserCreateForm;
 import eu.wisniewska.www.repository.AdminUserRepository;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -23,10 +24,16 @@ public class AdminUserService {
         return adminUserRepository.findAll();
     }
 
-    public void save(AdminUser adminUser) {
+    public void save(AdminUserCreateForm adminUserCreateForm) {
+
+        AdminUser adminUser = new AdminUser();
+
+        adminUser.setUsername(adminUserCreateForm.getUsername());
+        adminUser.setRole(adminUserCreateForm.getRole());
         adminUser.setPassword(
-                bCryptPasswordEncoder.encode(adminUser.getPassword())
+                bCryptPasswordEncoder.encode(adminUserCreateForm.getPassword())
         );
+
         adminUserRepository.save(adminUser);
     }
 

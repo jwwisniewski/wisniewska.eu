@@ -1,6 +1,7 @@
 package eu.wisniewska.www.service;
 
 import eu.wisniewska.www.entity.AdminUser;
+import eu.wisniewska.www.form.AdminUserCreateForm;
 import eu.wisniewska.www.repository.AdminUserRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -53,9 +54,9 @@ public class AdminUserServiceTest {
 
     @Test
     public void test_save_WHEN_passwordIsPlainText_THEN_encodesPassword() {
-        AdminUser adminUser = new AdminUser();
-        adminUser.setPassword("plaintext");
-        adminUserService.save(adminUser);
+        AdminUserCreateForm adminUserCreateForm = new AdminUserCreateForm();
+        adminUserCreateForm.setPassword("plaintext");
+        adminUserService.save(adminUserCreateForm);
 
         ArgumentCaptor<AdminUser> captor = ArgumentCaptor.forClass(AdminUser.class);
         verify(adminUserRepository).save(captor.capture());

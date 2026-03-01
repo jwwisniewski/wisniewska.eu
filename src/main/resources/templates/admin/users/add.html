@@ -7,7 +7,7 @@
 <h1>Create a new Admin User</h1>
 <section>
     <form
-            th:object="${adminUser}"
+            th:object="${adminUserCreateForm}"
             th:action="@{/_admin/users/save}"
             method="post"
     >

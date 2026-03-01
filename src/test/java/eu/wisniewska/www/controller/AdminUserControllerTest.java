@@ -110,7 +110,7 @@ public class AdminUserControllerTest {
                         post(SAVE_URL)
                                 .with(csrf())
                                 .param("username", "test")
-                                .param("password", "fake")
+                                .param("password", "password")
                                 .param("role", "ADMIN")
                 )
                 .andExpect(redirectedUrl(LISTING_URL))
