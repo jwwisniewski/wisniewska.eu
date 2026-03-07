@@ -10,6 +10,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.UUID;
 
@@ -47,13 +48,14 @@ public class AdminUserController {
     }
 
     @PostMapping("/save")
-    public String save(@Valid @ModelAttribute AdminUserCreateForm adminUserCreateForm, BindingResult bindingResult, Model model) {
+    public String save(@Valid @ModelAttribute AdminUserCreateForm adminUserCreateForm, BindingResult bindingResult, Model model, RedirectAttributes redirectAttributes) {
         if (bindingResult.hasErrors()) {
             model.addAttribute("adminUserRoles", AdminUserRole.values());
             return "admin/users/add";
         }
 
         adminUserService.save(adminUserCreateForm);
+        redirectAttributes.addFlashAttribute("successMessage", "User created successfully");
 
         return "redirect:/_admin/users";
     }
@@ -72,20 +74,22 @@ public class AdminUserController {
     }
 
     @PostMapping("/update")
-    public String update(@Valid @ModelAttribute AdminUserEditForm adminUserEditForm, BindingResult bindingResult, Model model) {
+    public String update(@Valid @ModelAttribute AdminUserEditForm adminUserEditForm, BindingResult bindingResult, Model model, RedirectAttributes redirectAttributes) {
         if (bindingResult.hasErrors()) {
             model.addAttribute("adminUserRoles", AdminUserRole.values());
             return "admin/users/edit";
         }
         adminUserService.update(adminUserEditForm);
+        redirectAttributes.addFlashAttribute("successMessage", "User updated successfully");
 
         return "redirect:/_admin/users/edit/" + adminUserEditForm.getId();
     }
 
     @PostMapping("/delete/{id}")
-    public String delete(@PathVariable UUID id) {
+    public String delete(@PathVariable UUID id, RedirectAttributes redirectAttributes) {
 
         adminUserService.delete(id);
+        redirectAttributes.addFlashAttribute("successMessage", "User deleted successfully");
 
         return "redirect:/_admin/users";
     }

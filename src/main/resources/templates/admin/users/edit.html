@@ -6,6 +6,7 @@
 <a th:href="@{/_admin/users}">Back to Users</a>
 <h1>Edit Admin User</h1>
 <section>
+    <div th:if="${successMessage}" th:text="${successMessage}" class="success-message"></div>
     <form
             th:object="${adminUserEditForm}"
             th:action="@{/_admin/users/update}"
