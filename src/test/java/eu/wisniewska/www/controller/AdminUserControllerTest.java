@@ -59,7 +59,7 @@ public class AdminUserControllerTest {
 
     @Test
     @WithAnonymousUser
-    public void test_WHEN_notAuthenticated_AND_indexCalled_THEN_redirectsToLogin() throws Exception {
+    public void test_index_WHEN_notAuthenticated_THEN_redirectsToLogin() throws Exception {
         mockMvc
                 .perform(get(LISTING_URL))
                 .andExpect(redirectedUrl("/login"))
@@ -68,7 +68,7 @@ public class AdminUserControllerTest {
 
     @Test
     @WithMockUser(roles = "ADMIN")
-    public void test_WHEN_indexCalled_THEN_returnsHTTP200() throws Exception {
+    public void test_index_WHEN_authenticated_THEN_returnsHTTP200() throws Exception {
         mockMvc
                 .perform(get(LISTING_URL))
                 .andExpect(status().isOk())
@@ -80,7 +80,7 @@ public class AdminUserControllerTest {
 
     @Test
     @WithAnonymousUser
-    public void test_WHEN_notAuthenticated_AND_addUserCalled_THEN_redirectsToLogin() throws Exception {
+    public void test_add_WHEN_notAuthenticated_THEN_redirectsToLogin() throws Exception {
         mockMvc
                 .perform(get(ADD_URL))
                 .andExpect(redirectedUrl("/login"))
@@ -89,7 +89,7 @@ public class AdminUserControllerTest {
 
     @Test
     @WithMockUser(roles = "ADMIN")
-    public void test_WHEN_addUserCalled_THEN_returnsHTTP200() throws Exception {
+    public void test_add_WHEN_authenticated_THEN_returnsHTTP200() throws Exception {
         mockMvc
                 .perform(get(ADD_URL))
                 .andExpect(status().isOk())
@@ -100,7 +100,7 @@ public class AdminUserControllerTest {
 
     @Test
     @WithAnonymousUser
-    public void test_WHEN_notAuthenticated_AND_saveUserCalled_THEN_redirectsToLogin() throws Exception {
+    public void test_save_WHEN_notAuthenticated_THEN_redirectsToLogin() throws Exception {
         mockMvc
                 .perform(post(SAVE_URL).with(csrf()))
                 .andExpect(redirectedUrl("/login"))
@@ -109,7 +109,7 @@ public class AdminUserControllerTest {
 
     @Test
     @WithMockUser(roles = "ADMIN")
-    public void test_WHEN_saveUserCalled_THEN_redirectsToListing() throws Exception {
+    public void test_save_WHEN_validPayload_THEN_redirectsToListing() throws Exception {
         mockMvc
                 .perform(
                         post(SAVE_URL)
@@ -125,7 +125,7 @@ public class AdminUserControllerTest {
     @ParameterizedTest(name = "{index}: {3}")
     @WithMockUser(roles = "ADMIN")
     @MethodSource("invalidUserData")
-    public void test_WHEN_incorrectPayload_THEN_returnsHTTP400(
+    public void test_save_WHEN_incorrectPayload_THEN_returnsFormWithErrors(
             String username,
             String password,
             String role,
@@ -146,7 +146,7 @@ public class AdminUserControllerTest {
 
     @Test
     @WithAnonymousUser
-    public void test_WHEN_notAuthenticated_AND_deleteCalled_THEN_redirectsToLogin() throws Exception {
+    public void test_delete_WHEN_notAuthenticated_THEN_redirectsToLogin() throws Exception {
         mockMvc
                 .perform(post(DELETE_URL).with(csrf()))
                 .andExpect(redirectedUrl("/login"))
@@ -155,7 +155,7 @@ public class AdminUserControllerTest {
 
     @Test
     @WithMockUser(roles = "ADMIN")
-    public void test_WHEN_deleteCalled_THEN_redirectsToListing() throws Exception {
+    public void test_delete_WHEN_validId_THEN_redirectsToListing() throws Exception {
 
         AdminUser user = new AdminUser();
         user.setUsername("toDelete");
@@ -174,7 +174,7 @@ public class AdminUserControllerTest {
 
     @Test
     @WithMockUser(roles = "ADMIN")
-    public void test_WHEN_deleteCalledWithInvalidId_THEN_returnsHTTP404() throws Exception {
+    public void test_delete_WHEN_invalidId_THEN_returnsHTTP404() throws Exception {
         mockMvc
                 .perform(
                         post(DELETE_URL + "/" + UUID.randomUUID())
