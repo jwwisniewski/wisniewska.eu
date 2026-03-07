@@ -1,7 +1,9 @@
 package eu.wisniewska.www.controller;
 
+import eu.wisniewska.www.entity.AdminUser;
 import eu.wisniewska.www.entity.AdminUserRole;
 import eu.wisniewska.www.form.AdminUserCreateForm;
+import eu.wisniewska.www.form.AdminUserEditForm;
 import eu.wisniewska.www.service.AdminUserService;
 import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
@@ -54,6 +56,30 @@ public class AdminUserController {
         adminUserService.save(adminUserCreateForm);
 
         return "redirect:/_admin/users";
+    }
+
+    @GetMapping("/edit/{id}")
+    public String edit(Model model, @PathVariable UUID id) {
+        AdminUser adminUser = adminUserService.findById(id);
+        model.addAttribute("pageTitle", "Edit '" + adminUser.getUsername() + "'");
+
+        AdminUserEditForm adminUserEditForm = new AdminUserEditForm(adminUser);
+
+        model.addAttribute("adminUserEditForm", adminUserEditForm);
+        model.addAttribute("adminUserRoles", AdminUserRole.values());
+
+        return "admin/users/edit";
+    }
+
+    @PostMapping("/update")
+    public String update(@Valid @ModelAttribute AdminUserEditForm adminUserEditForm, BindingResult bindingResult, Model model) {
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("adminUserRoles", AdminUserRole.values());
+            return "admin/users/edit";
+        }
+        adminUserService.update(adminUserEditForm);
+
+        return "redirect:/_admin/users/edit/" + adminUserEditForm.getId();
     }
 
     @PostMapping("/delete/{id}")

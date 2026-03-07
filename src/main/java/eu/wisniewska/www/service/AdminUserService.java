@@ -2,9 +2,12 @@ package eu.wisniewska.www.service;
 
 import eu.wisniewska.www.entity.AdminUser;
 import eu.wisniewska.www.form.AdminUserCreateForm;
+import eu.wisniewska.www.form.AdminUserEditForm;
 import eu.wisniewska.www.repository.AdminUserRepository;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.UUID;
@@ -18,6 +21,10 @@ public class AdminUserService {
     public AdminUserService(AdminUserRepository adminUserRepository, BCryptPasswordEncoder bCryptPasswordEncoder) {
         this.adminUserRepository = adminUserRepository;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
+    }
+
+    public AdminUser findById(UUID id) {
+        return adminUserRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Admin user not found"));
     }
 
     public List<AdminUser> findAll() {
@@ -34,6 +41,17 @@ public class AdminUserService {
                 bCryptPasswordEncoder.encode(adminUserCreateForm.getPassword())
         );
 
+        adminUserRepository.save(adminUser);
+    }
+
+    public void update(AdminUserEditForm adminUserEditForm) {
+        AdminUser adminUser = findById(adminUserEditForm.getId());
+        adminUser.setRole(adminUserEditForm.getRole());
+        if (adminUserEditForm.getPassword() != null) {
+            adminUser.setPassword(
+                    bCryptPasswordEncoder.encode(adminUserEditForm.getPassword())
+            );
+        }
         adminUserRepository.save(adminUser);
     }
 

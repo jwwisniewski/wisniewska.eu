@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="pl" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{admin/fragments :: head(${pageTitle})}"/>
+<body>
+<nav th:replace="~{admin/fragments :: nav(${activePage})}"></nav>
+<a th:href="@{/_admin/users}">Back to Users</a>
+<h1>Edit Admin User</h1>
+<section>
+    <form
+            th:object="${adminUserEditForm}"
+            th:action="@{/_admin/users/update}"
+            method="post"
+    >
+        <table>
+            <tr>
+                <th>
+                    <label for="username">Username:</label>
+                </th>
+                <td>
+                    <input type="text" id="username" th:field="*{username}" readonly>
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    <label for="password">Password:</label>
+                </th>
+                <td>
+                    <input type="password" id="password" th:field="*{password}">
+                    <span th:if="${#fields.hasErrors('password')}" th:errors="*{password}" class="error-message"></span>
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    <label for="role">Role:</label>
+                </th>
+                <td>
+                    <select id="role" name="role" th:field="*{role}">
+                        <option th:each="role : ${adminUserRoles}" th:value="${role}" th:text="${role}"></option>
+                    </select>
+                    <span th:if="${#fields.hasErrors('role')}" th:errors="*{role}" class="error-message"></span>
+                </td>
+            </tr>
+            <tr>
+                <th colspan="2">
+                    <input type="hidden" th:field="*{id}">
+                    <button type="submit">Update User</button>
+                </th>
+            </tr>
+        </table>
+    </form>
+
+</section>
+</body>
+</html>
