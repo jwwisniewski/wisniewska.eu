@@ -10,6 +10,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.test.context.support.WithAnonymousUser;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
@@ -32,11 +33,24 @@ public class AdminUserControllerTest {
     private static final String ADD_URL = "/_admin/users/add";
     private static final String SAVE_URL = "/_admin/users/save";
     private static final String DELETE_URL = "/_admin/users/delete";
+    private static final String EDIT_URL = "/_admin/users/edit";
+    private static final String UPDATE_URL = "/_admin/users/update";
+    private static final String LOGIN_URL = "/login";
 
     @Autowired
     private MockMvc mockMvc;
     @Autowired
     private AdminUserRepository adminUserRepository;
+    @Autowired
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
+
+    private AdminUser givenThereIsAUser() {
+        AdminUser user = new AdminUser();
+        user.setUsername(UUID.randomUUID().toString());
+        user.setPassword(bCryptPasswordEncoder.encode("password"));
+        user.setRole(AdminUserRole.ADMIN);
+        return adminUserRepository.save(user);
+    }
 
     static Stream<Arguments> invalidUserData() {
         return Stream.of(
@@ -62,7 +76,7 @@ public class AdminUserControllerTest {
     public void test_index_WHEN_notAuthenticated_THEN_redirectsToLogin() throws Exception {
         mockMvc
                 .perform(get(LISTING_URL))
-                .andExpect(redirectedUrl("/login"))
+                .andExpect(redirectedUrl(LOGIN_URL))
         ;
     }
 
@@ -83,7 +97,7 @@ public class AdminUserControllerTest {
     public void test_add_WHEN_notAuthenticated_THEN_redirectsToLogin() throws Exception {
         mockMvc
                 .perform(get(ADD_URL))
-                .andExpect(redirectedUrl("/login"))
+                .andExpect(redirectedUrl(LOGIN_URL))
         ;
     }
 
@@ -103,7 +117,7 @@ public class AdminUserControllerTest {
     public void test_save_WHEN_notAuthenticated_THEN_redirectsToLogin() throws Exception {
         mockMvc
                 .perform(post(SAVE_URL).with(csrf()))
-                .andExpect(redirectedUrl("/login"))
+                .andExpect(redirectedUrl(LOGIN_URL))
         ;
     }
 
@@ -149,19 +163,14 @@ public class AdminUserControllerTest {
     public void test_delete_WHEN_notAuthenticated_THEN_redirectsToLogin() throws Exception {
         mockMvc
                 .perform(post(DELETE_URL).with(csrf()))
-                .andExpect(redirectedUrl("/login"))
+                .andExpect(redirectedUrl(LOGIN_URL))
         ;
     }
 
     @Test
     @WithMockUser(roles = "ADMIN")
     public void test_delete_WHEN_validId_THEN_redirectsToListing() throws Exception {
-
-        AdminUser user = new AdminUser();
-        user.setUsername("toDelete");
-        user.setPassword("hashed");
-        user.setRole(AdminUserRole.ADMIN);
-        adminUserRepository.save(user);
+        AdminUser user = givenThereIsAUser();
 
         mockMvc
                 .perform(
@@ -183,5 +192,77 @@ public class AdminUserControllerTest {
                 .andExpect(status().isNotFound())
         ;
     }
+
+    @Test
+    @WithAnonymousUser
+    public void test_edit_WHEN_notAuthenticated_THEN_redirectsToLogin() throws Exception {
+        mockMvc
+                .perform(get(EDIT_URL + UUID.randomUUID()))
+                .andExpect(redirectedUrl(LOGIN_URL))
+        ;
+    }
+
+    @Test
+    @WithMockUser(roles = "ADMIN")
+    public void test_edit_WHEN_authenticated_BUT_entityDoesNotExist_THEN_returnsHTTP404() throws Exception {
+        mockMvc
+                .perform(get(EDIT_URL + UUID.randomUUID()))
+                .andExpect(status().isNotFound())
+        ;
+    }
+
+    @Test
+    @WithMockUser(roles = "ADMIN")
+    public void test_edit_WHEN_authenticated_THEN_returnsHTTP200() throws Exception {
+        AdminUser user = givenThereIsAUser();
+
+        mockMvc
+                .perform(get(EDIT_URL + "/" + user.getId()))
+                .andExpect(status().isOk())
+        ;
+    }
+
+    @Test
+    @WithAnonymousUser
+    public void test_update_WHEN_notAuthenticated_THEN_redirectsToLogin() throws Exception {
+        mockMvc
+                .perform(post(UPDATE_URL).with(csrf()))
+                .andExpect(redirectedUrl(LOGIN_URL))
+        ;
+    }
+
+    @Test
+    @WithMockUser(roles = "ADMIN")
+    public void test_update_WHEN_authenticated__BUT_entityDoesNotExist_THEN_returnsHTTP404() throws Exception {
+        mockMvc
+                .perform(
+                        post(UPDATE_URL)
+                                .with(csrf())
+                                .param("id", UUID.randomUUID().toString())
+                                .param("password", "password")
+                                .param("role", "ADMIN")
+                )
+                .andExpect(status().isNotFound())
+        ;
+    }
+
+
+    @Test
+    @WithMockUser(roles = "ADMIN")
+    public void test_update_WHEN_authenticated_THEN_redirectsToEdit() throws Exception {
+        AdminUser user = givenThereIsAUser();
+
+        mockMvc
+                .perform(
+                        post(UPDATE_URL)
+                                .with(csrf())
+                                .param("id", user.getId().toString())
+                                .param("password", "password")
+                                .param("role", "ADMIN")
+                )
+                .andExpect(redirectedUrl(EDIT_URL + "/" + user.getId()))
+        ;
+    }
+
 
 }
