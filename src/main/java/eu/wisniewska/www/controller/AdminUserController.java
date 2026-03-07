@@ -1,6 +1,6 @@
 package eu.wisniewska.www.controller;
 
-import eu.wisniewska.www.entity.AdminUser;
+import eu.wisniewska.www.entity.AdminUserRole;
 import eu.wisniewska.www.form.AdminUserCreateForm;
 import eu.wisniewska.www.service.AdminUserService;
 import jakarta.validation.Valid;
@@ -39,13 +39,15 @@ public class AdminUserController {
     public String add(Model model) {
         model.addAttribute("pageTitle", "Adding a new Admin User");
         model.addAttribute("adminUserCreateForm", new AdminUserCreateForm());
+        model.addAttribute("adminUserRoles", AdminUserRole.values());
 
         return "admin/users/add";
     }
 
     @PostMapping("/save")
-    public String save(@Valid @ModelAttribute AdminUserCreateForm adminUserCreateForm, BindingResult bindingResult) {
+    public String save(@Valid @ModelAttribute AdminUserCreateForm adminUserCreateForm, BindingResult bindingResult, Model model) {
         if (bindingResult.hasErrors()) {
+            model.addAttribute("adminUserRoles", AdminUserRole.values());
             return "admin/users/add";
         }
 

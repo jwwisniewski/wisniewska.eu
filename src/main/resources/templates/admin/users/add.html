@@ -17,7 +17,7 @@
                     <label for="username">Username:</label>
                 </th>
                 <td>
-                    <input type="text" id="username" name="username" required>
+                    <input type="text" id="username" th:field="*{username}">
                     <span th:if="${#fields.hasErrors('username')}" th:errors="*{username}" class="error-message"></span>
                 </td>
             </tr>
@@ -26,7 +26,7 @@
                     <label for="password">Password:</label>
                 </th>
                 <td>
-                    <input type="password" id="password" name="password" required>
+                    <input type="password" id="password" th:field="*{password}">
                     <span th:if="${#fields.hasErrors('password')}" th:errors="*{password}" class="error-message"></span>
                 </td>
             </tr>
@@ -35,9 +35,9 @@
                     <label for="role">Role:</label>
                 </th>
                 <td>
-                    <select id="role" name="role">
-                        <option value="ADMIN">Admin</option>
-                        <option value="USER">User</option>
+                    <select id="role" name="role" th:field="*{role}">
+                        <option value="" th:selected="${adminUserCreateForm.role == null}">Choose role...</option>
+                        <option th:each="role : ${adminUserRoles}" th:value="${role}" th:text="${role}"></option>
                     </select>
                     <span th:if="${#fields.hasErrors('role')}" th:errors="*{role}" class="error-message"></span>
                 </td>
