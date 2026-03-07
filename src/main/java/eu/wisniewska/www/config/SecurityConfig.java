@@ -40,7 +40,7 @@ public class SecurityConfig {
                 )
                 .logout(
                         logout -> logout
-                                .logoutUrl("/logout").logoutSuccessUrl("/login")
+                                .logoutUrl("/logout").logoutSuccessUrl("/_admin")
                 )
                 .authorizeHttpRequests(
                         authorizeRequests -> authorizeRequests
