@@ -88,6 +88,7 @@ public class AdminUserController {
     @PostMapping("/delete/{id}")
     public String delete(@PathVariable UUID id, RedirectAttributes redirectAttributes) {
 
+        adminUserService.findById(id);
         adminUserService.delete(id);
         redirectAttributes.addFlashAttribute("successMessage", "User deleted successfully");
 

@@ -1,5 +1,8 @@
 package eu.wisniewska.www.controller;
 
+import eu.wisniewska.www.entity.AdminUser;
+import eu.wisniewska.www.entity.AdminUserRole;
+import eu.wisniewska.www.repository.AdminUserRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -32,6 +35,8 @@ public class AdminUserControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
+    @Autowired
+    private AdminUserRepository adminUserRepository;
 
     static Stream<Arguments> invalidUserData() {
         return Stream.of(
@@ -151,12 +156,31 @@ public class AdminUserControllerTest {
     @Test
     @WithMockUser(roles = "ADMIN")
     public void test_WHEN_deleteCalled_THEN_redirectsToListing() throws Exception {
+
+        AdminUser user = new AdminUser();
+        user.setUsername("toDelete");
+        user.setPassword("hashed");
+        user.setRole(AdminUserRole.ADMIN);
+        adminUserRepository.save(user);
+
+        mockMvc
+                .perform(
+                        post(DELETE_URL + "/" + user.getId())
+                                .with(csrf())
+                )
+                .andExpect(redirectedUrl(LISTING_URL))
+        ;
+    }
+
+    @Test
+    @WithMockUser(roles = "ADMIN")
+    public void test_WHEN_deleteCalledWithInvalidId_THEN_returnsHTTP404() throws Exception {
         mockMvc
                 .perform(
                         post(DELETE_URL + "/" + UUID.randomUUID())
                                 .with(csrf())
                 )
-                .andExpect(redirectedUrl(LISTING_URL))
+                .andExpect(status().isNotFound())
         ;
     }
 
