@@ -2,34 +2,43 @@
 <html lang="pl" xmlns:th="http://www.thymeleaf.org">
 <head th:replace="~{admin/fragments :: head(${pageTitle})}"/>
 <body>
-<nav th:replace="~{admin/fragments :: nav(${activePage})}"></nav>
-<div class="container">
-    <a th:href="@{/_admin/users}" class="btn btn-outline-secondary btn-sm mb-3">&larr; Back to Users</a>
-    <h1>Edit Admin User</h1>
-    <div th:replace="~{admin/fragments :: flash}"></div>
-    <div class="card mt-3">
-        <div class="card-body">
-            <form th:object="${adminUserEditForm}" th:action="@{/_admin/users/update}" method="post">
-                <input type="hidden" th:field="*{id}">
-                <div class="mb-3">
-                    <label for="username" class="form-label">Username</label>
-                    <input type="text" id="username" th:field="*{username}" class="form-control" readonly>
-                </div>
-                <div class="mb-3">
-                    <label for="password" class="form-label">Password</label>
-                    <input type="password" id="password" th:field="*{password}" class="form-control" th:classappend="${#fields.hasErrors('password')} ? 'is-invalid'" placeholder="Leave blank to keep current">
-                    <div th:if="${#fields.hasErrors('password')}" th:errors="*{password}" class="invalid-feedback"></div>
-                </div>
-                <div class="mb-3">
-                    <label for="role" class="form-label">Role</label>
-                    <select id="role" th:field="*{role}" class="form-select" th:classappend="${#fields.hasErrors('role')} ? 'is-invalid'">
-                        <option th:each="role : ${adminUserRoles}" th:value="${role}" th:text="${role}"></option>
-                    </select>
-                    <div th:if="${#fields.hasErrors('role')}" th:errors="*{role}" class="invalid-feedback"></div>
-                </div>
-                <button type="submit" class="btn btn-primary">Update User</button>
-            </form>
-        </div>
+<div class="admin-wrapper">
+    <div th:replace="~{admin/fragments :: sidebar(${activePage})}"></div>
+    <div class="admin-content">
+        <main class="p-4">
+            <nav aria-label="breadcrumb" class="mb-3">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a th:href="@{/_admin}"><i class="bi bi-house-door me-1"></i>Dashboard</a></li>
+                    <li class="breadcrumb-item"><a th:href="@{/_admin/users}">Users</a></li>
+                    <li class="breadcrumb-item active" th:text="${adminUserEditForm.username}">Edit User</li>
+                </ol>
+            </nav>
+            <h1 class="mb-4">Edit Admin User</h1>
+            <div th:replace="~{admin/fragments :: flash}"></div>
+            <div style="max-width: 500px;">
+                <form th:object="${adminUserEditForm}" th:action="@{/_admin/users/update}" method="post">
+                    <input type="hidden" th:field="*{id}">
+                    <div class="form-floating mb-3">
+                        <input type="text" id="username" th:field="*{username}" class="form-control" placeholder="Username" readonly>
+                        <label for="username">Username</label>
+                    </div>
+                    <div class="form-floating mb-3">
+                        <input type="password" id="password" th:field="*{password}" class="form-control" th:classappend="${#fields.hasErrors('password')} ? 'is-invalid'" placeholder="Password">
+                        <label for="password">Password (leave blank to keep current)</label>
+                        <div th:if="${#fields.hasErrors('password')}" th:errors="*{password}" class="invalid-feedback"></div>
+                    </div>
+                    <div class="form-floating mb-3">
+                        <select id="role" th:field="*{role}" class="form-select" th:classappend="${#fields.hasErrors('role')} ? 'is-invalid'">
+                            <option th:each="role : ${adminUserRoles}" th:value="${role}" th:text="${role}"></option>
+                        </select>
+                        <label for="role">Role</label>
+                        <div th:if="${#fields.hasErrors('role')}" th:errors="*{role}" class="invalid-feedback"></div>
+                    </div>
+                    <button type="submit" class="btn btn-primary"><i class="bi bi-check-lg me-1"></i>Update User</button>
+                </form>
+            </div>
+        </main>
+        <footer th:replace="~{admin/fragments :: footer}"></footer>
     </div>
 </div>
 <script th:replace="~{admin/fragments :: scripts}"></script>
