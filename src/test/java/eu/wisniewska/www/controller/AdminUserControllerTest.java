@@ -44,15 +44,20 @@ public class AdminUserControllerTest {
     @Autowired
     private BCryptPasswordEncoder bCryptPasswordEncoder;
 
-    private AdminUser givenThereIsAUser() {
-        AdminUser user = new AdminUser();
-        user.setUsername(UUID.randomUUID().toString());
-        user.setPassword(bCryptPasswordEncoder.encode("password"));
-        user.setRole(AdminUserRole.ADMIN);
-        return adminUserRepository.save(user);
+    static Stream<Arguments> invalidUpdateData() {
+        return Stream.of(
+                Arguments.of("ab", "ADMIN", "password too short"),
+                Arguments.of("abcdefg", "ADMIN", "password 7 chars"),
+                Arguments.of("a".repeat(256), "ADMIN", "password too long"),
+                Arguments.of("password", "INVALID", "invalid role"),
+                Arguments.of("password", "admin", "role wrong case"),
+                Arguments.of("password", "SUPERADMIN", "non-existent role"),
+                Arguments.of("password", "", "blank role"),
+                Arguments.of("ab", "INVALID", "password too short and invalid role")
+        );
     }
 
-    static Stream<Arguments> invalidUserData() {
+    static Stream<Arguments> invalidCreateData() {
         return Stream.of(
                 Arguments.of("", "password", "ADMIN", "blank username"),
                 Arguments.of("ab", "password", "ADMIN", "username too short"),
@@ -69,6 +74,14 @@ public class AdminUserControllerTest {
                 Arguments.of("", "", "", "all fields blank"),
                 Arguments.of("ab", "ab", "INVALID", "all fields invalid")
         );
+    }
+
+    private AdminUser givenThereIsAUser() {
+        AdminUser user = new AdminUser();
+        user.setUsername(UUID.randomUUID().toString());
+        user.setPassword(bCryptPasswordEncoder.encode("password"));
+        user.setRole(AdminUserRole.ADMIN);
+        return adminUserRepository.save(user);
     }
 
     @Test
@@ -138,7 +151,7 @@ public class AdminUserControllerTest {
 
     @ParameterizedTest(name = "{index}: {3}")
     @WithMockUser(roles = "ADMIN")
-    @MethodSource("invalidUserData")
+    @MethodSource("invalidCreateData")
     public void test_save_WHEN_incorrectPayload_THEN_returnsFormWithErrors(
             String username,
             String password,
@@ -246,6 +259,29 @@ public class AdminUserControllerTest {
         ;
     }
 
+    @ParameterizedTest(name = "{index}: {2}")
+    @WithMockUser(roles = "ADMIN")
+    @MethodSource("invalidUpdateData")
+    public void test_update_WHEN_authenticated_BUT_invalidPayload_THEN_returnsFormWithErrors(
+            String password,
+            String role,
+            String testCase
+    ) throws Exception {
+        AdminUser user = givenThereIsAUser();
+
+        mockMvc
+                .perform(
+                        post(UPDATE_URL)
+                                .with(csrf())
+                                .param("id", user.getId().toString())
+                                .param("password", password)
+                                .param("role", role)
+                )
+                .andExpect(status().isOk())
+                .andExpect(model().hasErrors())
+                .andExpect(view().name("admin/users/edit"))
+        ;
+    }
 
     @Test
     @WithMockUser(roles = "ADMIN")
