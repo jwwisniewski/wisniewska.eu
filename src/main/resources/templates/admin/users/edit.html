@@ -3,53 +3,35 @@
 <head th:replace="~{admin/fragments :: head(${pageTitle})}"/>
 <body>
 <nav th:replace="~{admin/fragments :: nav(${activePage})}"></nav>
-<a th:href="@{/_admin/users}">Back to Users</a>
-<h1>Edit Admin User</h1>
-<section>
-    <div th:if="${successMessage}" th:text="${successMessage}" class="success-message"></div>
-    <form
-            th:object="${adminUserEditForm}"
-            th:action="@{/_admin/users/update}"
-            method="post"
-    >
-        <table>
-            <tr>
-                <th>
-                    <label for="username">Username:</label>
-                </th>
-                <td>
-                    <input type="text" id="username" th:field="*{username}" readonly>
-                </td>
-            </tr>
-            <tr>
-                <th>
-                    <label for="password">Password:</label>
-                </th>
-                <td>
-                    <input type="password" id="password" th:field="*{password}">
-                    <span th:if="${#fields.hasErrors('password')}" th:errors="*{password}" class="error-message"></span>
-                </td>
-            </tr>
-            <tr>
-                <th>
-                    <label for="role">Role:</label>
-                </th>
-                <td>
-                    <select id="role" name="role" th:field="*{role}">
+<div class="container">
+    <a th:href="@{/_admin/users}" class="btn btn-outline-secondary btn-sm mb-3">&larr; Back to Users</a>
+    <h1>Edit Admin User</h1>
+    <div th:replace="~{admin/fragments :: flash}"></div>
+    <div class="card mt-3">
+        <div class="card-body">
+            <form th:object="${adminUserEditForm}" th:action="@{/_admin/users/update}" method="post">
+                <input type="hidden" th:field="*{id}">
+                <div class="mb-3">
+                    <label for="username" class="form-label">Username</label>
+                    <input type="text" id="username" th:field="*{username}" class="form-control" readonly>
+                </div>
+                <div class="mb-3">
+                    <label for="password" class="form-label">Password</label>
+                    <input type="password" id="password" th:field="*{password}" class="form-control" th:classappend="${#fields.hasErrors('password')} ? 'is-invalid'" placeholder="Leave blank to keep current">
+                    <div th:if="${#fields.hasErrors('password')}" th:errors="*{password}" class="invalid-feedback"></div>
+                </div>
+                <div class="mb-3">
+                    <label for="role" class="form-label">Role</label>
+                    <select id="role" th:field="*{role}" class="form-select" th:classappend="${#fields.hasErrors('role')} ? 'is-invalid'">
                         <option th:each="role : ${adminUserRoles}" th:value="${role}" th:text="${role}"></option>
                     </select>
-                    <span th:if="${#fields.hasErrors('role')}" th:errors="*{role}" class="error-message"></span>
-                </td>
-            </tr>
-            <tr>
-                <th colspan="2">
-                    <input type="hidden" th:field="*{id}">
-                    <button type="submit">Update User</button>
-                </th>
-            </tr>
-        </table>
-    </form>
-
-</section>
+                    <div th:if="${#fields.hasErrors('role')}" th:errors="*{role}" class="invalid-feedback"></div>
+                </div>
+                <button type="submit" class="btn btn-primary">Update User</button>
+            </form>
+        </div>
+    </div>
+</div>
+<script th:replace="~{admin/fragments :: scripts}"></script>
 </body>
 </html>

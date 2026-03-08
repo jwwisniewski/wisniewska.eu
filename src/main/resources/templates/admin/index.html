@@ -1,11 +1,12 @@
 <!DOCTYPE html>
 <html lang="pl" xmlns:th="http://www.thymeleaf.org">
-<head th:replace="~{admin/fragments :: head(${pageTitle})}" />
+<head th:replace="~{admin/fragments :: head(${pageTitle})}"/>
 <body>
 <nav th:replace="~{admin/fragments :: nav(${activePage})}"></nav>
-<h1>Panel Home</h1>
-<section>
-    Panel Body
-</section>
+<div class="container">
+    <h1>Dashboard</h1>
+    <p class="text-muted">Welcome to the admin panel.</p>
+</div>
+<script th:replace="~{admin/fragments :: scripts}"></script>
 </body>
 </html>

@@ -3,13 +3,14 @@
 <head th:replace="~{admin/fragments :: head(${pageTitle})}"/>
 <body>
 <nav th:replace="~{admin/fragments :: nav(${activePage})}"></nav>
-<a th:href="@{/_admin/users/add}">Add User</a>
-<h1>Admin Users Listing</h1>
-
-<section>
-    <div th:if="${successMessage}" th:text="${successMessage}" class="success-message"></div>
-    <table>
-        <thead>
+<div class="container">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h1>Admin Users</h1>
+        <a th:href="@{/_admin/users/add}" class="btn btn-primary">Add User</a>
+    </div>
+    <div th:replace="~{admin/fragments :: flash}"></div>
+    <table class="table table-striped table-hover">
+        <thead class="table-dark">
         <tr>
             <th>Username</th>
             <th>Role</th>
@@ -19,22 +20,17 @@
         <tbody>
         <tr th:each="user : ${users}">
             <td th:text="${user.username}"></td>
-            <td th:text="${user.role}"></td>
+            <td><span class="badge" th:classappend="${user.role.name() == 'ADMIN'} ? 'bg-danger' : 'bg-secondary'" th:text="${user.role}"></span></td>
             <td>
-                <ul>
-                    <li>
-                        <a th:href="@{/_admin/users/edit/{id}(id=${user.id})}">Edit</a>
-                    </li>
-                    <li>
-                        <form th:action="@{/_admin/users/delete/{id}(id=${user.id})}" method="post">
-                            <button type="submit">Delete</button>
-                        </form>
-                    </li>
-                </ul>
+                <a th:href="@{/_admin/users/edit/{id}(id=${user.id})}" class="btn btn-sm btn-outline-primary">Edit</a>
+                <form th:action="@{/_admin/users/delete/{id}(id=${user.id})}" method="post" class="d-inline">
+                    <button type="submit" class="btn btn-sm btn-outline-danger" onclick="return confirm('Are you sure?')">Delete</button>
+                </form>
             </td>
         </tr>
         </tbody>
     </table>
-</section>
+</div>
+<script th:replace="~{admin/fragments :: scripts}"></script>
 </body>
 </html>

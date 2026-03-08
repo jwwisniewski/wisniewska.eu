@@ -57,6 +57,7 @@ public class AdminUserController {
     @PostMapping("/save")
     public String save(@Valid @ModelAttribute AdminUserCreateForm adminUserCreateForm, BindingResult bindingResult, Model model, RedirectAttributes redirectAttributes) {
         if (bindingResult.hasErrors()) {
+            model.addAttribute("pageTitle", "Adding a new Admin User");
             model.addAttribute("adminUserRoles", AdminUserRole.values());
             return "admin/users/add";
         }
@@ -83,6 +84,7 @@ public class AdminUserController {
     @PostMapping("/update")
     public String update(@Valid @ModelAttribute AdminUserEditForm adminUserEditForm, BindingResult bindingResult, Model model, RedirectAttributes redirectAttributes) {
         if (bindingResult.hasErrors()) {
+            model.addAttribute("pageTitle", "Edit User");
             model.addAttribute("adminUserRoles", AdminUserRole.values());
             return "admin/users/edit";
         }
