@@ -35,7 +35,7 @@ public class AdminUserControllerTest {
     private static final String DELETE_URL = "/_admin/users/delete";
     private static final String EDIT_URL = "/_admin/users/edit";
     private static final String UPDATE_URL = "/_admin/users/update";
-    private static final String LOGIN_URL = "/login";
+    private static final String LOGIN_URL = "/_admin/login";
 
     @Autowired
     private MockMvc mockMvc;

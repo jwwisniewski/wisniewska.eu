@@ -17,6 +17,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ActiveProfiles("test")
 public class AdminControllerTest {
     public static final String URL = "/_admin";
+    public static final String LOGIN_URL = "/_admin/login";
 
     @Autowired
     private MockMvc mockMvc;
@@ -25,7 +26,7 @@ public class AdminControllerTest {
     void WHEN_indexCalledUnauthenticated_THEN_returnsHTTP200() throws Exception {
         mockMvc
                 .perform(get(URL))
-                .andExpect(redirectedUrl("/login"))
+                .andExpect(redirectedUrl(LOGIN_URL))
         ;
     }
 
