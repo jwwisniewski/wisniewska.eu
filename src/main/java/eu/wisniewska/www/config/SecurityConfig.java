@@ -1,12 +1,10 @@
 package eu.wisniewska.www.config;
 
-import eu.wisniewska.www.service.CustomUserDetailsService;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
@@ -14,6 +12,10 @@ import org.springframework.security.web.SecurityFilterChain;
 public class SecurityConfig {
 
     private static final String ROLE_ADMIN = "ADMIN";
+    @Value("${app.admin.remember-me-key}")
+    private String rememberMeKey;
+    @Value("${app.admin.remember-me-cookie-name}")
+    private String rememberMeCookieName;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -33,10 +35,16 @@ public class SecurityConfig {
                                 .loginProcessingUrl("/_admin/login")
                                 .defaultSuccessUrl("/_admin")
                 )
+                .rememberMe(
+                        rememberMe -> rememberMe
+                                .key(rememberMeKey)
+                                .rememberMeCookieName(rememberMeCookieName)
+                                .tokenValiditySeconds(86400 * 7)
+                )
                 .logout(
                         logout -> logout
                                 .logoutUrl("/logout")
-                                .logoutSuccessUrl("/_admin/login")
+                                .logoutSuccessUrl("/_admin/login?logout")
                 )
                 .authorizeHttpRequests(
                         authorizeRequests -> authorizeRequests

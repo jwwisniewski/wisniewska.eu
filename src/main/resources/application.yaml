@@ -31,3 +31,5 @@ app:
     username: admin
     password: qwertyuiop
     role: ADMIN
+    remember-me-key: secret-key
+    remember-me-cookie-name: remember-me-cookie
