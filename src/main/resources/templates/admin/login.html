@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="pl" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{admin/fragments :: head(${pageTitle})}"/>
+<body>
+<div class="container">
+    <div th:if="${param.error}" class="alert alert-danger">Invalid username or password.</div>
+    <form th:action="@{/_admin/login}" method="post">
+        <div class="mb-3">
+            <label for="username" class="form-label">Username</label>
+            <input type="text" id="username" name="username" class="form-control">
+        </div>
+        <div class="mb-3">
+            <label for="password" class="form-label">Password</label>
+            <input type="password" id="password" name="password" class="form-control">
+        </div>
+        <button type="submit" class="btn btn-primary">Login</button>
+    </form>
+</div>
+<script th:replace="~{admin/fragments :: scripts}"></script>
+</body>
+</html>

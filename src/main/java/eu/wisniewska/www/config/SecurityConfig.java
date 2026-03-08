@@ -29,16 +29,20 @@ public class SecurityConfig {
                 )
                 .formLogin(
                         formLogin -> formLogin
+                                .loginPage("/_admin/login")
+                                .loginProcessingUrl("/_admin/login")
                                 .defaultSuccessUrl("/_admin")
                 )
                 .logout(
                         logout -> logout
-                                .logoutUrl("/logout").logoutSuccessUrl("/_admin")
+                                .logoutUrl("/logout")
+                                .logoutSuccessUrl("/_admin/login")
                 )
                 .authorizeHttpRequests(
                         authorizeRequests -> authorizeRequests
                                 .requestMatchers("/actuator/**").permitAll()
                                 .requestMatchers("/h2-console/**").permitAll()
+                                .requestMatchers("/_admin/login").permitAll()
                                 .requestMatchers("/_admin/**").hasRole(ROLE_ADMIN)
                                 .anyRequest().permitAll()
                 )
