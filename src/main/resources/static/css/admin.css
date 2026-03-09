@@ -29,14 +29,22 @@ body {
     flex: 1;
 }
 
-/* --- SIDEBAR NAV --- */
+/* --- SIDEBAR --- */
+.sidebar {
+    background: linear-gradient(180deg, #2d1b4e 0%, #1a0b2e 100%) !important;
+}
+
 .sidebar .nav-link:hover {
     background: rgba(255, 255, 255, 0.1);
     border-radius: 6px;
 }
 
 .sidebar .nav-link.active {
-    background-color: #0d6efd !important;
+    background-color: #6f42c1 !important;
+}
+
+.sidebar .border-secondary {
+    border-color: rgba(138, 43, 226, 0.3) !important;
 }
 
 /* --- BREADCRUMBS --- */
@@ -56,6 +64,12 @@ body {
 /* --- FOOTER --- */
 .footer {
     border-top: 1px solid #dee2e6;
+}
+
+/* --- TABLE --- */
+.table-dark {
+    --bs-table-bg: #2d1b4e;
+    --bs-table-border-color: rgba(138, 43, 226, 0.3);
 }
 
 /* --- FLOATING LABEL VALIDATION FIX --- */

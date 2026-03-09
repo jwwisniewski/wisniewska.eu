@@ -8,16 +8,11 @@
     <link rel="stylesheet" th:href="@{/css/admin.css}">
 </head>
 
-<div th:fragment="sidebar(activePage)" class="d-flex flex-column flex-shrink-0 bg-dark sidebar text-center">
-    <a th:href="@{/_admin}" class="d-block p-3 text-white text-decoration-none border-bottom border-secondary" data-bs-toggle="tooltip" data-bs-placement="right" title="Admin Panel">
-        <i class="bi bi-pencil-square fs-4"></i>
+<div th:fragment="sidebar(activePage)" class="d-flex flex-column flex-shrink-0 sidebar text-center">
+    <a th:href="@{/_admin}" class="d-block p-1 text-white text-decoration-none border-bottom border-secondary" data-bs-toggle="tooltip" data-bs-placement="right" title="Admin Panel">
+        <img th:src="@{/img/cherry-logo.png}" alt="Admin" style="width: 48px; height: auto;">
     </a>
     <ul class="nav nav-pills nav-flush flex-column mb-auto">
-        <li class="nav-item">
-            <a class="nav-link py-3 text-white" th:classappend="${activePage == 'index'} ? 'active'" th:href="@{/_admin}" data-bs-toggle="tooltip" data-bs-placement="right" title="Dashboard">
-                <i class="bi bi-speedometer2 fs-5"></i>
-            </a>
-        </li>
         <li class="nav-item">
             <a class="nav-link py-3 text-white" th:classappend="${activePage == 'users'} ? 'active'" th:href="@{/_admin/users}" data-bs-toggle="tooltip" data-bs-placement="right" title="Users">
                 <i class="bi bi-people fs-5"></i>
