@@ -1,7 +1,7 @@
 body {
     margin: 0;
     height: 100vh;
-    background: url('/img/error.jpg') center/cover no-repeat;
+    background: url('/img/background.jpg') center/cover no-repeat;
     display: flex;
     align-items: center;
     justify-content: center;

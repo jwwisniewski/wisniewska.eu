@@ -1,34 +1,37 @@
 <!DOCTYPE html>
 <html lang="pl" xmlns:th="http://www.thymeleaf.org">
 <head th:replace="~{admin/fragments :: head(${pageTitle})}"/>
-<body class="d-flex align-items-center py-4 bg-body-tertiary" style="min-height: 100vh;">
-<main class="w-100 m-auto" style="max-width: 330px; padding: 15px;">
-    <form th:action="@{/_admin/login}" method="post" class="text-center">
-        <h1 class="h3 mb-3 fw-normal">Anna Wiśniewska</h1>
-        <p class="text-muted mb-4">Admin Panel</p>
+<body class="d-flex align-items-center justify-content-center" style="min-height: 100vh; background: url('/img/background.jpg') center/cover no-repeat fixed;">
+<main class="w-100 m-auto" style="max-width: 400px; padding: 15px;">
+    <div style="background: rgba(0,0,0,0.55); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-radius: 16px; padding: 2.5rem 2rem; border: 1px solid rgba(255,255,255,0.1);">
+        <form th:action="@{/_admin/login}" method="post" class="text-center">
+            <img th:src="@{/img/cherry-logo.png}" alt="Logo" style="width: 64px; height: auto;" class="mb-3">
+            <h1 class="h3 mb-1 fw-normal text-white">Anna Wiśniewska</h1>
+            <p class="mb-4" style="color: rgba(255,255,255,0.6);">Admin Panel</p>
 
-        <div th:if="${param.error}" class="alert alert-danger py-2">
-            Invalid username or password.
-        </div>
-        <div th:if="${param.logout}" class="alert alert-success py-2">
-            You have been logged out.
-        </div>
+            <div th:if="${param.error}" class="alert alert-danger py-2">
+                Invalid username or password.
+            </div>
+            <div th:if="${param.logout}" class="alert alert-success py-2">
+                You have been logged out.
+            </div>
 
-        <div class="form-floating mb-2">
-            <input type="text" id="username" name="username" class="form-control" placeholder="Username" autofocus>
-            <label for="username">Username</label>
-        </div>
-        <div class="form-floating mb-3">
-            <input type="password" id="password" name="password" class="form-control" placeholder="Password">
-            <label for="password">Password</label>
-        </div>
-        <div class="form-check mb-3 text-start">
-            <input type="checkbox" id="remember-me" name="remember-me" class="form-check-input">
-            <label for="remember-me" class="form-check-label">Remember me</label>
-        </div>
-        <button class="w-100 btn btn-lg btn-primary" type="submit">Sign in</button>
-        <p class="mt-4 mb-0 text-muted">&copy; 2026</p>
-    </form>
+            <div class="form-floating mb-2">
+                <input type="text" id="username" name="username" class="form-control" placeholder="Username" autofocus>
+                <label for="username">Username</label>
+            </div>
+            <div class="form-floating mb-3">
+                <input type="password" id="password" name="password" class="form-control" placeholder="Password">
+                <label for="password">Password</label>
+            </div>
+            <div class="form-check mb-3 text-start">
+                <input type="checkbox" id="remember-me" name="remember-me" class="form-check-input">
+                <label for="remember-me" class="form-check-label text-white">Remember me</label>
+            </div>
+            <button class="w-100 btn btn-lg btn-primary" type="submit">Sign in</button>
+            <p class="mt-4 mb-0" style="color: rgba(255,255,255,0.4);">&copy; 2026</p>
+        </form>
+    </div>
 </main>
 <script th:replace="~{admin/fragments :: scripts}"></script>
 </body>

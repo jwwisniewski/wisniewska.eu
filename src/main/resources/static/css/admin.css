@@ -1,5 +1,6 @@
 body {
     font-family: 'Cleanvertising', sans-serif;
+    background: url('/img/background.jpg') center/cover no-repeat fixed;
 }
 
 /* --- LAYOUT --- */
@@ -23,6 +24,9 @@ body {
     display: flex;
     flex-direction: column;
     min-height: 100vh;
+    background: rgba(255, 255, 255, 0.5);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
 }
 
 .admin-content > main {
@@ -63,7 +67,8 @@ body {
 
 /* --- FOOTER --- */
 .footer {
-    border-top: 1px solid #dee2e6;
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+    background: transparent !important;
 }
 
 /* --- TABLE --- */
