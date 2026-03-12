@@ -1,1 +1,1 @@
-web: java -Xmx192m -Xms128m -XX:+UseSerialGC -jar target/*.jar --spring.profiles.active=production
+web: java -Xmx192m -Xms128m -XX:MaxMetaspaceSize=96m -Xss512k -XX:ReservedCodeCacheSize=48m -XX:+UseSerialGC -jar target/*.jar --spring.profiles.active=production
