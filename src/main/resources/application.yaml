@@ -5,10 +5,13 @@ spring:
     url: jdbc:h2:file:./data/eu.wisniewska
     username: user
     password: password
+    hikari:
+      maximum-pool-size: 3
   jpa:
     hibernate:
       ddl-auto: update
     show-sql: true
+    open-in-view: false
   h2:
     console:
       enabled: true
@@ -26,6 +29,14 @@ spring:
 
 server:
   port: 8181
+  tomcat:
+    threads:
+      max: 10
+      min-spare: 2
+  compression:
+    enabled: true
+    mime-types: text/html,text/xml,text/plain,application/json,application/xml,application/javascript,text/css,image/svg+xml
+    min-response-size: 1024
 
 management:
   endpoints:
